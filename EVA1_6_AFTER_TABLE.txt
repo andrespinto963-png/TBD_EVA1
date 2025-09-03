@@ -1,0 +1,457 @@
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > /sql
+Expected an operand but found / (SyntaxError)
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect -mc root@localhost
+WARNING: The -mc option was deprecated, please use --mc instead. (Option has been processed as --mc).
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| prueba_tbd         |
+| sakila             |
+| sys                |
+| tbd1               |
+| world              |
++--------------------+
+8 rows in set (0.0024 sec)
+ MySQL  localhost:3306 ssl  SQL > use tbd1;
+Default schema set to `tbd1`.
+Fetching global names, object names from `tbd1` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc persona;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id        | int         | YES  |     | NULL    |       |
+| nombre    | varchar(50) | YES  |     | NULL    |       |
+| apellidos | varchar(50) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.0049 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table persona
+                                     -> add rfc varchar(13);
+Query OK, 0 rows affected (0.0833 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc persona;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id        | int         | YES  |     | NULL    |       |
+| nombre    | varchar(50) | YES  |     | NULL    |       |
+| apellidos | varchar(50) | YES  |     | NULL    |       |
+| rfc       | varchar(13) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.0040 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > select * from persona;
++----+--------+-----------+------+
+| id | nombre | apellidos | rfc  |
++----+--------+-----------+------+
+|  1 | ruben  | hernandez | NULL |
+|  2 | juan   | perez     | NULL |
+|  3 | paola  | x         | NULL |
+|  4 | pedro  | paramo    | NULL |
+|  5 | juan   | rulfo     | NULL |
++----+--------+-----------+------+
+5 rows in set (0.0014 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table persona
+                                     -> drp rfc;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'drp rfc' at line 2
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table persona
+                                     -> drop rfc
+                                     -> ;
+Query OK, 0 rows affected (0.0505 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > select * from persona;
++----+--------+-----------+
+| id | nombre | apellidos |
++----+--------+-----------+
+|  1 | ruben  | hernandez |
+|  2 | juan   | perez     |
+|  3 | paola  | x         |
+|  4 | pedro  | paramo    |
+|  5 | juan   | rulfo     |
++----+--------+-----------+
+5 rows in set (0.0012 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table persona add rfc varchar(13) not null;
+Query OK, 0 rows affected (0.0445 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > select * from persona;
++----+--------+-----------+-----+
+| id | nombre | apellidos | rfc |
++----+--------+-----------+-----+
+|  1 | ruben  | hernandez |     |
+|  2 | juan   | perez     |     |
+|  3 | paola  | x         |     |
+|  4 | pedro  | paramo    |     |
+|  5 | juan   | rulfo     |     |
++----+--------+-----------+-----+
+5 rows in set (0.0012 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table persona
+                                     -> add curp varchar(18) not null after apellidos;
+Query OK, 0 rows affected (0.0345 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc persona;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id        | int         | YES  |     | NULL    |       |
+| nombre    | varchar(50) | YES  |     | NULL    |       |
+| apellidos | varchar(50) | YES  |     | NULL    |       |
+| curp      | varchar(18) | NO   |     | NULL    |       |
+| rfc       | varchar(13) | NO   |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.0040 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > insert into persona(rfc)
+                                     -> value("123456789012345");
+ERROR: 1406 (22001): Data too long for column 'rfc' at row 1
+ MySQL  localhost:3306 ssl  tbd1  SQL > selec * from persona;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selec * from persona' at line 1
+ MySQL  localhost:3306 ssl  tbd1  SQL > select * from persona;
++----+--------+-----------+------+-----+
+| id | nombre | apellidos | curp | rfc |
++----+--------+-----------+------+-----+
+|  1 | ruben  | hernandez |      |     |
+|  2 | juan   | perez     |      |     |
+|  3 | paola  | x         |      |     |
+|  4 | pedro  | paramo    |      |     |
+|  5 | juan   | rulfo     |      |     |
++----+--------+-----------+------+-----+
+5 rows in set (0.0014 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table persona
+                                     -> modify id int not null auto_increment key;
+Query OK, 5 rows affected (0.1071 sec)
+
+Records: 5  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc persona;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| id        | int         | NO   | PRI | NULL    | auto_increment |
+| nombre    | varchar(50) | YES  |     | NULL    |                |
+| apellidos | varchar(50) | YES  |     | NULL    |                |
+| curp      | varchar(18) | NO   |     | NULL    |                |
+| rfc       | varchar(13) | NO   |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+5 rows in set (0.0021 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > insert into persona(nombre, apellidos, curp, rfc)
+                                     -> value("juan","perez","dddd","asdfs");
+Query OK, 1 row affected (0.0085 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > select * from persona;
++----+--------+-----------+------+-------+
+| id | nombre | apellidos | curp | rfc   |
++----+--------+-----------+------+-------+
+|  1 | ruben  | hernandez |      |       |
+|  2 | juan   | perez     |      |       |
+|  3 | paola  | x         |      |       |
+|  4 | pedro  | paramo    |      |       |
+|  5 | juan   | rulfo     |      |       |
+|  6 | juan   | perez     | dddd | asdfs |
++----+--------+-----------+------+-------+
+6 rows in set (0.0009 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table persona
+                                     -> rename column apellidos to ap_paterno;
+Query OK, 0 rows affected (0.0401 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc persona;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| id         | int         | NO   | PRI | NULL    | auto_increment |
+| nombre     | varchar(50) | YES  |     | NULL    |                |
+| ap_paterno | varchar(50) | YES  |     | NULL    |                |
+| curp       | varchar(18) | NO   |     | NULL    |                |
+| rfc        | varchar(13) | NO   |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.0025 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table persona
+                                     -> add ap_materno varchar(50)after ap_paterno;
+Query OK, 0 rows affected (0.0368 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc persona;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| id         | int         | NO   | PRI | NULL    | auto_increment |
+| nombre     | varchar(50) | YES  |     | NULL    |                |
+| ap_paterno | varchar(50) | YES  |     | NULL    |                |
+| ap_materno | varchar(50) | YES  |     | NULL    |                |
+| curp       | varchar(18) | NO   |     | NULL    |                |
+| rfc        | varchar(13) | NO   |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.0020 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > show tables;
++----------------+
+| Tables_in_tbd1 |
++----------------+
+| customer       |
+| persona        |
+| student        |                      ;)
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 9
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| prueba_tbd         |
+| sakila             |
+| sys                |
+| tbd1               |
+| world              |
++--------------------+
+8 rows in set (0.0017 sec)
+ MySQL  localhost:3306 ssl  SQL > use tbd1;
+Default schema set to `tbd1`.
+Fetching global names, object names from `tbd1` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc persona;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| id         | int         | NO   | PRI | NULL    | auto_increment |
+| nombre     | varchar(50) | YES  |     | NULL    |                |
+| ap_paterno | varchar(50) | YES  |     | NULL    |                |
+| ap_materno | varchar(50) | YES  |     | NULL    |                |
+| curp       | varchar(18) | NO   |     | NULL    |                |
+| rfc        | varchar(13) | NO   |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.0024 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > show tables;
++----------------+
+| Tables_in_tbd1 |
++----------------+
+| customer       |
+| persona        |
+| student        |
++----------------+
+3 rows in set (0.0023 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > create table docente(nombre varchar(50) not null, plaza varchar(50), horas_plasa)                                               able docent
+ MySQL  localhost:3306 ssl  tbd1  SQL > char()
+ MySQL  localhost:3306 ssl  tbd1  SQL > ;
+ERROR: 1065 (42000): Query was empty
+ MySQL  localhost:3306 ssl  tbd1  SQL > create table docente(nombre varchar(50)not null, plaza varchar(50),horas_plaza int,centro_trabajo varchar(50) not null, salario decimal(10,2),antiguedad int not null);
+Query OK, 0 rows affected (0.0506 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > show tables;
++----------------+
+| Tables_in_tbd1 |
++----------------+
+| customer       |
+| docente        |
+| persona        |
+| student        |
++----------------+
+4 rows in set (0.0031 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc docente;
++----------------+---------------+------+-----+---------+-------+
+| Field          | Type          | Null | Key | Default | Extra |
++----------------+---------------+------+-----+---------+-------+
+| nombre         | varchar(50)   | NO   |     | NULL    |       |
+| plaza          | varchar(50)   | YES  |     | NULL    |       |
+| horas_plaza    | int           | YES  |     | NULL    |       |
+| centro_trabajo | varchar(50)   | NO   |     | NULL    |       |
+| salario        | decimal(10,2) | YES  |     | NULL    |       |
+| antiguedad     | int           | NO   |     | NULL    |       |
++----------------+---------------+------+-----+---------+-------+
+6 rows in set (0.0035 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > after table docente
+
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect -- mc root@localhost
+\connect [--mx|--mysqlx|--mc|--mysql] [--ssh <sshuri>] <URI>
+ MySQL  SQL > ;
+ERROR: Not connected.
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| prueba_tbd         |
+| sakila             |
+| sys                |
+| tbd1               |
+| world              |
++--------------------+
+8 rows in set (0.0017 sec)
+ MySQL  localhost:3306 ssl  SQL > use tbd1;
+Default schema set to `tbd1`.
+Fetching global names, object names from `tbd1` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd1  SQL > show tables;
++----------------+
+| Tables_in_tbd1 |
++----------------+
+| customer       |
+| docente        |
+| persona        |
+| student        |
++----------------+
+4 rows in set (0.0124 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc docente;
++----------------+---------------+------+-----+---------+-------+
+| Field          | Type          | Null | Key | Default | Extra |
++----------------+---------------+------+-----+---------+-------+
+| nombre         | varchar(50)   | NO   |     | NULL    |       |
+| plaza          | varchar(50)   | YES  |     | NULL    |       |
+| horas_plaza    | int           | YES  |     | NULL    |       |
+| centro_trabajo | varchar(50)   | NO   |     | NULL    |       |
+| salario        | decimal(10,2) | YES  |     | NULL    |       |
+| antiguedad     | int           | NO   |     | NULL    |       |
++----------------+---------------+------+-----+---------+-------+
+6 rows in set (0.0036 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente
+                                     -> change
+                                     -> ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente
+                                     -> add id int not null auto_increment key;
+Query OK, 0 rows affected (0.1079 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente
+                                     -> add apellidos varchar(50) after nombre;
+Query OK, 0 rows affected (0.0827 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente
+                                     -> add rfc varchar(13) not null after apellidos;
+Query OK, 0 rows affected (0.0772 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc docente;
++----------------+---------------+------+-----+---------+----------------+
+| Field          | Type          | Null | Key | Default | Extra          |
++----------------+---------------+------+-----+---------+----------------+
+| nombre         | varchar(50)   | NO   |     | NULL    |                |
+| apellidos      | varchar(50)   | YES  |     | NULL    |                |
+| rfc            | varchar(13)   | NO   |     | NULL    |                |
+| plaza          | varchar(50)   | YES  |     | NULL    |                |
+| horas_plaza    | int           | YES  |     | NULL    |                |
+| centro_trabajo | varchar(50)   | NO   |     | NULL    |                |
+| salario        | decimal(10,2) | YES  |     | NULL    |                |
+| antiguedad     | int           | NO   |     | NULL    |                |
+| id             | int           | NO   | PRI | NULL    | auto_increment |
++----------------+---------------+------+-----+---------+----------------+
+9 rows in set (0.0026 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente
+                                     -> changer rfc r_f_c varchar(13);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'changer rfc r_f_c varchar(13)' at line 2
+ MySQL  localhost:3306 ssl  tbd1  SQL > after table docente
+                                     -> modify plaza varchar(50) not null;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'after table docente
+modify plaza varchar(50) not null' at line 1
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente
+                                     -> modify plaza varchar(50) not null;
+Query OK, 0 rows affected (0.0818 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc docente;
++----------------+---------------+------+-----+---------+----------------+
+| Field          | Type          | Null | Key | Default | Extra          |
++----------------+---------------+------+-----+---------+----------------+
+| nombre         | varchar(50)   | NO   |     | NULL    |                |
+| apellidos      | varchar(50)   | YES  |     | NULL    |                |
+| rfc            | varchar(13)   | NO   |     | NULL    |                |
+| plaza          | varchar(50)   | NO   |     | NULL    |                |
+| horas_plaza    | int           | YES  |     | NULL    |                |
+| centro_trabajo | varchar(50)   | NO   |     | NULL    |                |
+| salario        | decimal(10,2) | YES  |     | NULL    |                |
+| antiguedad     | int           | NO   |     | NULL    |                |
+| id             | int           | NO   | PRI | NULL    | auto_increment |
++----------------+---------------+------+-----+---------+----------------+
+9 rows in set (0.0032 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente
+                                     -> change horas_plaza horas;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente
+                                     -> rename colunm horas_plaza to horas;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'horas_plaza to horas' at line 2
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente rename column horas_plaza to horas;
+Query OK, 0 rows affected (0.0307 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc docente;
++----------------+---------------+------+-----+---------+----------------+
+| Field          | Type          | Null | Key | Default | Extra          |
++----------------+---------------+------+-----+---------+----------------+
+| nombre         | varchar(50)   | NO   |     | NULL    |                |
+| apellidos      | varchar(50)   | YES  |     | NULL    |                |
+| rfc            | varchar(13)   | NO   |     | NULL    |                |
+| plaza          | varchar(50)   | NO   |     | NULL    |                |
+| horas          | int           | YES  |     | NULL    |                |
+| centro_trabajo | varchar(50)   | NO   |     | NULL    |                |
+| salario        | decimal(10,2) | YES  |     | NULL    |                |
+| antiguedad     | int           | NO   |     | NULL    |                |
+| id             | int           | NO   | PRI | NULL    | auto_increment |
++----------------+---------------+------+-----+---------+----------------+
+9 rows in set (0.0025 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente rename rfc to R_F_C;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'to R_F_C' at line 1
+ MySQL  localhost:3306 ssl  tbd1  SQL > alter table docente rename column rfc to R_f_C;
+Query OK, 0 rows affected (0.0384 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd1  SQL > desc docente;
++----------------+---------------+------+-----+---------+----------------+
+| Field          | Type          | Null | Key | Default | Extra          |
++----------------+---------------+------+-----+---------+----------------+
+| nombre         | varchar(50)   | NO   |     | NULL    |                |
+| apellidos      | varchar(50)   | YES  |     | NULL    |                |
+| R_f_C          | varchar(13)   | NO   |     | NULL    |                |
+| plaza          | varchar(50)   | NO   |     | NULL    |                |
+| horas          | int           | YES  |     | NULL    |                |
+| centro_trabajo | varchar(50)   | NO   |     | NULL    |                |
+| salario        | decimal(10,2) | YES  |     | NULL    |                |
+| antiguedad     | int           | NO   |     | NULL    |                |
+| id             | int           | NO   | PRI | NULL    | auto_increment |
++----------------+---------------+------+-----+---------+----------------+
+9 rows in set (0.0025 sec)
+ MySQL  localhost:3306 ssl  tbd1  SQL >
